@@ -1,72 +1,70 @@
-name: Build macOS DMG
+name: Build macOS App
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  build-macos:
+  build:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install create-dmg
-        run: npm install -g create-dmg
-
-      - name: Find HTML and ICNS
+      - name: Set variables
         run: |
-          HTML_FILE=$(git ls-files | grep -i '\.html$' | head -n 1)
-          ICON_FILE=$(git ls-files | grep -i '\.icns$' | head -n 1)
+          echo "HTML_FILE=index.html" >> $GITHUB_ENV
+          echo "ICON_FILE=icon.icns" >> $GITHUB_ENV
+          echo "APP_NAME=TakeOffFly" >> $GITHUB_ENV
 
-          if [ -z "$HTML_FILE" ]; then
-            echo "ERROR: No HTML file found"
-            exit 1
-          fi
-
-          if [ -z "$ICON_FILE" ]; then
-            echo "ERROR: No ICNS file found"
-            exit 1
-          fi
-
-          echo "HTML_FILE=$HTML_FILE" >> $GITHUB_ENV
-          echo "ICON_FILE=$ICON_FILE" >> $GITHUB_ENV
-
-      - name: Create .app structure
+      - name: Prepare app bundle
         run: |
-          mkdir -p TakeOffFly.app/Contents/{MacOS,Resources}
+          echo "Preparing app bundle"
+          mkdir -p $APP_NAME.app/Contents/{MacOS,Resources}
 
-          cp "$HTML_FILE" TakeOffFly.app/Contents/Resources/index.html
-          cp "$ICON_FILE" TakeOffFly.app/Contents/Resources/AppIcon.icns
+          cp "$HTML_FILE" "$APP_NAME.app/Contents/Resources/index.html"
+          cp "$ICON_FILE" "$APP_NAME.app/Contents/Resources/AppIcon.icns"
 
-          echo '<?xml version="1.0" encoding="UTF-8"?>' > TakeOffFly.app/Contents/Info.plist
-          echo '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' >> TakeOffFly.app/Contents/Info.plist
-          echo '<plist version="1.0"><dict>' >> TakeOffFly.app/Contents/Info.plist
-          echo '<key>CFBundleName</key><string>TakeOffFly</string>' >> TakeOffFly.app/Contents/Info.plist
-          echo '<key>CFBundleIdentifier</key><string>com.takeofffly.app</string>' >> TakeOffFly.app/Contents/Info.plist
-          echo '<key>CFBundleExecutable</key><string>TakeOffFly</string>' >> TakeOffFly.app/Contents/Info.plist
-          echo '<key>CFBundlePackageType</key><string>APPL</string>' >> TakeOffFly.app/Contents/Info.plist
-          echo '<key>CFBundleIconFile</key><string>AppIcon.icns</string>' >> TakeOffFly.app/Contents/Info.plist
-          echo '</dict></plist>' >> TakeOffFly.app/Contents/Info.plist
+          cat > $APP_NAME.app/Contents/Info.plist <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>CFBundleName</key>
+            <string>TakeOffFly</string>
+            <key>CFBundleDisplayName</key>
+            <string>TakeOffFly</string>
+            <key>CFBundleVersion</key>
+            <string>1.0</string>
+            <key>CFBundleExecutable</key>
+            <string>TakeOffFly</string>
+            <key>CFBundlePackageType</key>
+            <string>APPL</string>
+            <key>CFBundleIdentifier</key>
+            <string>com.example.takeofffly</string>
+            <key>CFBundleIconFile</key>
+            <string>AppIcon.icns</string>
+          </dict>
+          </plist>
+          PLIST
 
-          echo '#!/bin/bash' > TakeOffFly.app/Contents/MacOS/TakeOffFly
-          echo 'DIR="$(cd "$(dirname "$0")/../Resources" && pwd)"' >> TakeOffFly.app/Contents/MacOS/TakeOffFly
-          echo 'open "$DIR/index.html"' >> TakeOffFly.app/Contents/MacOS/TakeOffFly
-
-          chmod +x TakeOffFly.app/Contents/MacOS/TakeOffFly
-
-      - name: Create DMG
+      - name: Create executable launcher
         run: |
-          create-dmg \
-            --volname "TakeOffFly Installer" \
-            --window-size 600 400 \
-            --icon-size 100 \
-            --app-drop-link 450 300 \
-            TakeOffFly-Installer.dmg \
-            TakeOffFly.app
+          cat > $APP_NAME.app/Contents/MacOS/$APP_NAME <<'EOF'
+          #!/bin/bash
+          open "$(dirname "$0")/../Resources/index.html"
+          EOF
+          chmod +x $APP_NAME.app/Contents/MacOS/$APP_NAME
 
-      - name: Upload DMG
+      - name: Zip app
+        run: |
+          zip -r $APP_NAME-macOS.zip $APP_NAME.app
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TakeOffFly-DMG
-          path: TakeOffFly-Installer.dmg
+          name: TakeOffFly-macOS
+          path: TakeOffFly-macOS.zip
