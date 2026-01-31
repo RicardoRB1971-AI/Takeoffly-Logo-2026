@@ -1,0 +1,81 @@
+name: Build macOS DMG
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install create-dmg
+        run: npm install --global create-dmg
+
+      - name: Find HTML and ICNS files
+        run: |
+          HTML_FILE=$(git ls-files | grep -i 'takeoffiy.*\.html' || true)
+          ICON_FILE=$(git ls-files | grep -i '\.icns' || true)
+          echo "Found HTML: $HTML_FILE"
+          echo "Found ICON: $ICON_FILE"
+          if [ -z "$HTML_FILE" ]; then echo "ERROR: HTML file not found (look for Takeoffiy...MAC.HTML)"; exit 1; fi
+          if [ -z "$ICON_FILE" ]; then echo "ERROR: .icns file not found"; exit 1; fi
+          echo "HTML_FILE=$HTML_FILE" >> $GITHUB_ENV
+          echo "ICON_FILE=$ICON_FILE" >> $GITHUB_ENV
+
+      - name: Prepare app bundle
+        run: |
+          echo "Preparing TakeOffFly.app using $HTML_FILE and $ICON_FILE"
+          mkdir -p TakeOffFly.app/Contents/{MacOS,Resources}
+          cp "$HTML_FILE" TakeOffFly.app/Contents/Resources/index.html
+          cp "$ICON_FILE" TakeOffFly.app/Contents/Resources/AppIcon.icns
+          cat > TakeOffFly.app/Contents/Info.plist <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleName</key>
+  <string>TakeOffFly</string>
+  <key>CFBundleDisplayName</key>
+  <string>TakeOffFly</string>
+  <key>CFBundleVersion</key>
+  <string>34.0</string>
+  <key>CFBundleExecutable</key>
+  <string>TakeOffFly</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleIdentifier</key>
+  <string>com.yourcompany.takeofffly</string>
+  <key>CFBundleIconFile</key>
+  <string>AppIcon.icns</string>
+</dict>
+</plist>
+PLIST
+          cat > TakeOffFly.app/Contents/MacOS/TakeOffFly <<'SH'
+#!/bin/bash
+DIR="$(cd "$(dirname "$0")/../Resources" && pwd)"
+open "$DIR/index.html"
+SH
+          chmod +x TakeOffFly.app/Contents/MacOS/TakeOffFly
+
+      - name: Create DMG
+        run: |
+          create-dmg \
+            --volname "TakeOffFly Installer" \
+            --window-pos 200 120 \
+            --window-size 600 400 \
+            --icon-size 100 \
+            --app-drop-link 450 320 \
+            "TakeOffFly-Installer.dmg" \
+            TakeOffFly.app
+
+      - name: Upload DMG artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TakeOffFly-Installer.dmg
+          path: TakeOffFly-Installer.dmg
