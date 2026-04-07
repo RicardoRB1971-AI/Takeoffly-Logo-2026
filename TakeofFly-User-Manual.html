@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Manual — TakeofFly v1.0</title>
+<style>
+  :root {
+    --indigo-600: #4f46e5;
+    --slate-50:  #f8fafc;
+    --slate-100: #f1f5f9;
+    --slate-200: #e2e8f0;
+    --slate-300: #cbd5e1;
+    --slate-400: #94a3b8;
+    --slate-500: #64748b;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --slate-800: #1e293b;
+    --slate-900: #0f172a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--slate-700);
+    background: var(--slate-50);
+  }
+
+  /* ── Cover ── */
+  .cover {
+    background: linear-gradient(135deg, var(--slate-900) 0%, #1e1b4b 60%, #312e81 100%);
+    color: #fff;
+    padding: 80px 60px 60px;
+    min-height: 340px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: rgba(99,102,241,0.15);
+  }
+  .cover-badge {
+    display: inline-block;
+    background: rgba(99,102,241,0.3);
+    border: 1px solid rgba(99,102,241,0.5);
+    color: #a5b4fc;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 22px;
+  }
+  .cover h1 {
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+  .cover-sub {
+    font-size: 18px;
+    color: #a5b4fc;
+    margin-bottom: 32px;
+  }
+  .cover-meta span {
+    display: inline-block;
+    margin-right: 28px;
+    font-size: 13px;
+    color: #c7d2fe;
+  }
+  .cover-meta span b { color: #fff; }
+
+  /* ── TOC ── */
+  .toc-section {
+    background: #fff;
+    border-bottom: 1px solid var(--slate-200);
+    padding: 48px 60px;
+  }
+  .toc-section h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--slate-800);
+    margin-bottom: 24px;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 40px;
+  }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--slate-200);
+    text-decoration: none;
+    color: var(--slate-700);
+    font-size: 14px;
+    transition: color .15s;
+  }
+  .toc-item:hover { color: var(--indigo-600); }
+  .toc-num {
+    min-width: 26px; height: 26px;
+    background: var(--indigo-600);
+    color: #fff;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ── Wrapper ── */
+  .wrapper { max-width: 900px; margin: 0 auto; padding: 0 40px; }
+
+  /* ── Sections ── */
+  section {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    margin: 32px 0;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 28px 32px 20px;
+    border-bottom: 2px solid var(--slate-100);
+  }
+  .section-num {
+    min-width: 40px; height: 40px;
+    background: var(--indigo-600);
+    color: #fff;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--slate-800);
+  }
+  section p, section ul, section ol { margin: 12px 32px; }
+  section h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--slate-800);
+    margin: 20px 32px 8px;
+  }
+  section h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--indigo-600);
+    margin: 16px 32px 4px;
+  }
+  section > *:last-child { margin-bottom: 28px; }
+
+  /* ── Tables ── */
+  .table-wrap { margin: 16px 32px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  thead tr { background: var(--slate-800); color: #fff; }
+  thead th {
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  tbody tr:nth-child(even) { background: var(--slate-50); }
+  tbody tr:hover { background: #eff6ff; }
+  td { padding: 9px 14px; border-bottom: 1px solid var(--slate-200); vertical-align: top; }
+
+  /* ── Lists ── */
+  ul, ol { padding-left: 22px; font-size: 15px; line-height: 2.0; }
+
+  /* ── Cards ── */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+    margin: 16px 32px;
+  }
+  .card {
+    background: var(--slate-50);
+    border: 1px solid var(--slate-200);
+    border-radius: 10px;
+    padding: 16px 14px;
+    text-align: center;
+  }
+  .card-icon { font-size: 26px; margin-bottom: 8px; }
+  .card-title { font-size: 13px; font-weight: 700; color: var(--slate-800); }
+  .card-desc { font-size: 12px; color: var(--slate-500); margin-top: 4px; }
+
+  /* ── Tips / Notes / Important ── */
+  .tip, .note, .important {
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    margin: 12px 32px;
+  }
+  .tip       { background: #eff6ff; border-left: 4px solid var(--indigo-600); }
+  .note      { background: #fefce8; border-left: 4px solid #f59e0b; }
+  .important { background: #fff1f2; border-left: 4px solid #f43f5e; }
+
+  /* ── KBD ── */
+  kbd {
+    display: inline-block;
+    background: var(--slate-100);
+    border: 1px solid var(--slate-300);
+    border-bottom: 3px solid var(--slate-400);
+    border-radius: 5px;
+    padding: 1px 8px;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 13px;
+    color: var(--slate-800);
+  }
+
+  /* ── Field list (Mark Details) ── */
+  .field-list { list-style: none; padding-left: 0; margin: 12px 32px; }
+  .field-list li {
+    display: flex;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--slate-100);
+    align-items: flex-start;
+  }
+  .field-num {
+    min-width: 26px; height: 26px;
+    background: var(--indigo-600);
+    color: #fff;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .field-body strong { color: var(--slate-800); }
+  .field-body .field-desc { font-size: 14px; color: var(--slate-600); }
+
+  /* ── Badges ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 2px 3px;
+  }
+  .badge-indigo { background: #e0e7ff; color: #3730a3; }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--slate-900);
+    color: var(--slate-300);
+    text-align: center;
+    padding: 36px 40px;
+    margin-top: 40px;
+    font-size: 13px;
+  }
+  footer strong { color: #fff; }
+  footer a { color: #818cf8; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<!-- ═══ COVER ═══ -->
+<div class="cover">
+  <div class="cover-badge">Official Documentation</div>
+  <h1>TakeofFly</h1>
+  <p class="cover-sub">Professional Project Takeoff &amp; Management System — v1.0</p>
+  <div class="cover-meta">
+    <span><b>Author:</b> Ricardo Rivera Blanco</span>
+    <span><b>Company:</b> TakeofFly (Puerto Rico)</span>
+    <span><b>Year:</b> 2026</span>
+  </div>
+</div>
+
+<!-- ═══ TABLE OF CONTENTS ═══ -->
+<div class="toc-section">
+  <div class="wrapper">
+    <h2>Table of Contents</h2>
+    <div class="toc-grid">
+      <a class="toc-item" href="#s1"><span class="toc-num">1</span> Introduction</a>
+      <a class="toc-item" href="#s9"><span class="toc-num">9</span> Subtract Tools</a>
+      <a class="toc-item" href="#s2"><span class="toc-num">2</span> Authentication &amp; Login</a>
+      <a class="toc-item" href="#s10"><span class="toc-num">10</span> Mark Details (Edit Properties)</a>
+      <a class="toc-item" href="#s3"><span class="toc-num">3</span> Interface Overview</a>
+      <a class="toc-item" href="#s11"><span class="toc-num">11</span> Notes &amp; Labels</a>
+      <a class="toc-item" href="#s4"><span class="toc-num">4</span> Project Setup</a>
+      <a class="toc-item" href="#s12"><span class="toc-num">12</span> Report</a>
+      <a class="toc-item" href="#s5"><span class="toc-num">5</span> Scale Calibration</a>
+      <a class="toc-item" href="#s13"><span class="toc-num">13</span> Chart</a>
+      <a class="toc-item" href="#s6"><span class="toc-num">6</span> Measurement Tools</a>
+      <a class="toc-item" href="#s14"><span class="toc-num">14</span> Suppliers</a>
+      <a class="toc-item" href="#s7"><span class="toc-num">7</span> Drawing Tools</a>
+      <a class="toc-item" href="#s15"><span class="toc-num">15</span> Save, Recover &amp; Integrate</a>
+      <a class="toc-item" href="#s8"><span class="toc-num">8</span> Edit Tools</a>
+      <a class="toc-item" href="#s16"><span class="toc-num">16</span> Keyboard Shortcuts</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrapper">
+
+<!-- ═══ 1. INTRODUCTION ═══ -->
+<section id="s1">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <h2>Introduction</h2>
+  </div>
+  <p><strong>TakeofFly</strong> is a professional desktop application built to perform construction and project takeoffs directly from PDF plans. It lets you place marks, measure dimensions and areas, organize items by CSI division, assign purchase orders and delivery notes, manage suppliers, generate reports, and visualize project progress — all in one place.</p>
+  <p>The application runs as a standalone desktop executable (Windows) and requires an active licensed account to operate. An internet connection is needed for authentication and for accessing the CSI database.</p>
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">📐</div>
+      <div class="card-title">Takeoff</div>
+      <div class="card-desc">Place pins, measure lines, areas and continuous paths directly on your PDF drawings.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🗂️</div>
+      <div class="card-title">CSI Organization</div>
+      <div class="card-desc">Classify every mark using CSI Division and Subdivision codes for professional reporting.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📦</div>
+      <div class="card-title">PO &amp; Delivery Tracking</div>
+      <div class="card-desc">Link marks to Purchase Orders and Delivery Notes to track procurement status.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <div class="card-title">Reports &amp; Charts</div>
+      <div class="card-desc">Export category totals to Excel and visualize progress with interactive donut charts.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏪</div>
+      <div class="card-title">Suppliers</div>
+      <div class="card-desc">Maintain a supplier directory linked to your project marks.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔗</div>
+      <div class="card-title">Project Integration</div>
+      <div class="card-desc">Merge takeoffs from multiple team members into a single consolidated project.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2. AUTHENTICATION ═══ -->
+<section id="s2">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <h2>Authentication &amp; Login</h2>
+  </div>
+  <p>TakeofFly uses a secure server-side authentication system. Every login is validated against a licensed account database.</p>
+  <h3>Login Process</h3>
+  <ol>
+    <li>Launch the TakeofFly application.</li>
+    <li>Enter your registered <strong>Email address</strong>.</li>
+    <li>Enter your <strong>Secret Key</strong> (provided at purchase — not your email password).</li>
+    <li>Click <strong>Login</strong>. The system validates your credentials and device.</li>
+    <li>Upon success the main workspace opens automatically.</li>
+  </ol>
+  <h3>Error Messages</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Message</th><th>Meaning</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Email not registered</td>
+          <td>The entered email was not found in the system.</td>
+          <td>Verify the email address or contact support.</td>
+        </tr>
+        <tr>
+          <td>Incorrect secret key</td>
+          <td>Your email is correct but the secret key is wrong.</td>
+          <td>Re-enter your secret key carefully. The email itself is correct.</td>
+        </tr>
+        <tr>
+          <td>License activated on another computer</td>
+          <td>The license is already bound to a different machine.</td>
+          <td>Contact <a href="mailto:riverablancoricardo@outlook.com">riverablancoricardo@outlook.com</a> to reset.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tip"><b>Tip:</b> Your device is identified by CPU, hostname, and RAM — not by screen resolution. Changing monitors will not affect your authentication.</div>
+</section>
+
+<!-- ═══ 3. INTERFACE OVERVIEW ═══ -->
+<section id="s3">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <h2>Interface Overview</h2>
+  </div>
+  <p>The TakeofFly interface is divided into four main zones:</p>
+  <h3>① Sidebar (Left Panel)</h3>
+  <p>The sidebar is broken into labeled sections:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Section</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Navigation</td><td>Switch between <strong>Editor</strong>, <strong>Suppliers</strong>, <strong>Report</strong>, and <strong>Chart</strong> views. Also holds your company logo.</td></tr>
+        <tr><td>Tools</td><td>Measurement and marking tools (Pin, Rectangle, Measure, etc.).</td></tr>
+        <tr><td>Edit</td><td>Editing tools (Drag, Clone, Eraser, Edit Properties, Vertices, Match Properties).</td></tr>
+        <tr><td>Subtract Tools</td><td>Tools to draw and manage area subtractions.</td></tr>
+        <tr><td>View</td><td>Visibility control, Undo, and Redo.</td></tr>
+        <tr><td>Notes</td><td>Create, edit, drag, rotate and delete labels and tags.</td></tr>
+        <tr><td>System</td><td>Full Screen toggle and Exit.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>② Main Bar (Top Header)</h3>
+  <p>Contains global controls always visible at the top:</p>
+  <h4>🔗 Connection Status</h4>
+  <p>Shows live database connectivity. Use <strong>Refresh</strong> to reconnect.</p>
+  <h4>🔐 Auth Status</h4>
+  <p>Shows your authenticated user and a <strong>Logout</strong> button.</p>
+  <h4>📁 Project Name</h4>
+  <p>Name your project. Required before saving or creating marks.</p>
+  <h4>📅 Start Date</h4>
+  <p>Set the project start date for reference.</p>
+  <h4>✨ New Project</h4>
+  <p>Clears all current data and starts fresh.</p>
+  <h4>📂 Load PDF</h4>
+  <p>Opens a PDF file to work on.</p>
+  <h4>💾 Save</h4>
+  <p>Saves the current project as a <code>.json</code> file.</p>
+  <h4>↩️ Recover</h4>
+  <p>Loads a previously saved <code>.json</code> project file.</p>
+  <h4>🔀 Integrate</h4>
+  <p>Merges another team member's project file into the current one.</p>
+  <h4>📋 Integration Log</h4>
+  <p>Review history of all integrations performed.</p>
+  <h3>③ Property Bar (Toolbar)</h3>
+  <p>Located below the Main Bar, this bar adapts to the selected tool and provides contextual controls:</p>
+  <ul>
+    <li><strong>Sheet ID</strong> — Assign an identifier to each drawing sheet (e.g., A-100).</li>
+    <li><strong>Scale</strong> — Calibrate the drawing scale, save scale presets, and apply them per sheet.</li>
+    <li><strong>Mark Properties</strong> — Set the active color and load from previous marks.</li>
+    <li><strong>Find Notes</strong> — Quick navigation dropdown to jump to any note on the plan.</li>
+    <li><strong>Zoom</strong> — Use the <strong>+</strong> and <strong>−</strong> buttons in the Property Bar to zoom in and out. There is also a zoom percentage display.</li>
+  </ul>
+  <h3>④ Canvas (Main Work Area)</h3>
+  <p>The central area where the PDF is rendered and all marks are drawn. Hover over any mark to see a <strong>tooltip</strong> with its details. Use the <strong>+ / −</strong> buttons in the Property Bar to zoom.</p>
+</section>
+
+<!-- ═══ 4. PROJECT SETUP ═══ -->
+<section id="s4">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <h2>Project Setup</h2>
+  </div>
+  <h3>Starting a New Project</h3>
+  <ol>
+    <li>Click <strong>New Project</strong> in the Main Bar.</li>
+    <li>Enter a <strong>Project Name</strong> (required for saving).</li>
+    <li>Set a <strong>Start Date</strong>.</li>
+    <li>Click <strong>Load PDF</strong> and select your drawing file.</li>
+    <li>Navigate pages using the page controls that appear once the PDF is loaded.</li>
+  </ol>
+  <h3>Company Logo</h3>
+  <p>Click the logo area at the top of the sidebar to upload your company logo. It will appear on printed reports.</p>
+  <h3>Sheet Identification</h3>
+  <p>Each page of the PDF can be assigned a Sheet ID (e.g., A-100, S-201):</p>
+  <ul>
+    <li><strong>Auto</strong> — Automatically reads the sheet number from the drawing text.</li>
+    <li><strong>Set Drawing ID Area</strong> — Draw a rectangle over the title block area to help the auto-detector.</li>
+    <li><strong>Manual</strong> — Type the ID directly into the Sheet ID input field.</li>
+  </ul>
+  <div class="tip"><b>Tip:</b> Always assign a Sheet ID before placing marks. It helps organize your report and allows marks to reference the correct drawing sheet.</div>
+</section>
+
+<!-- ═══ 5. SCALE CALIBRATION ═══ -->
+<section id="s5">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <h2>Scale Calibration</h2>
+  </div>
+  <p>Before measuring, you must calibrate the scale so TakeofFly converts pixels to real-world units (feet, meters, etc.).</p>
+  <h3>How to Calibrate</h3>
+  <ol>
+    <li>In the Property Bar, click <strong>Calibrate</strong> (Scale Tools section).</li>
+    <li>Click on two known points on the drawing (e.g., the ends of a dimension line).</li>
+    <li>Enter the real-world distance and select the unit.</li>
+    <li>Click <strong>Save</strong> (💾 icon) to save the scale for reuse.</li>
+    <li>Use the <strong>Saved scales</strong> dropdown and <strong>Apply</strong> to quickly set the same scale on other sheets.</li>
+  </ol>
+  <div class="note"><b>Note:</b> If you place marks without calibrating, check the <strong>"not necessary"</strong> checkbox. Measurements will be in pixels and the report will show an N.T.S. warning.</div>
+</section>
+
+<!-- ═══ 6. MEASUREMENT TOOLS ═══ -->
+<section id="s6">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <h2>Measurement Tools</h2>
+  </div>
+  <p>Found in the <strong>Tools</strong> section of the sidebar. These tools create marks that are counted and measured in the Report.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tool</th><th>How to Use</th><th>Measures</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Mark (Pin) 📍</td>
+          <td>Single click on the drawing to place a numbered pin.</td>
+          <td>Count (each)</td>
+        </tr>
+        <tr>
+          <td>Rectangle ▭</td>
+          <td>Click and drag to draw a rectangle.</td>
+          <td>Area (ft², m², etc.)</td>
+        </tr>
+        <tr>
+          <td>Measure ↔</td>
+          <td>Click start point, then end point. Hold <kbd>Ctrl</kbd> to constrain horizontal/vertical.</td>
+          <td>Length</td>
+        </tr>
+        <tr>
+          <td>Continuous Measure</td>
+          <td>Click multiple points to measure a continuous path. Double-click to finish.</td>
+          <td>Total Length</td>
+        </tr>
+        <tr>
+          <td>Polygon Area ⬡</td>
+          <td>Click multiple points to define a polygon boundary. Double-click to close.</td>
+          <td>Area + Perimeter</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tip"><b>Tip:</b> After placing any mark, the <strong>Edit Properties</strong> panel opens automatically so you can classify the mark immediately.</div>
+</section>
+
+<!-- ═══ 7. DRAWING TOOLS ═══ -->
+<section id="s7">
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <h2>Drawing Tools</h2>
+  </div>
+  <p>Drawing tools create graphic elements on the plan. They can also carry CSI classification and appear in the Report.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tool</th><th>How to Use</th></tr></thead>
+      <tbody>
+        <tr><td>Line</td><td>Click and drag. Hold <kbd>Ctrl</kbd> to snap to 0°/45°/90°.</td></tr>
+        <tr><td>P-Line (Polyline)</td><td>Click multiple points to build a connected line path. Double-click to finish.</td></tr>
+        <tr><td>Circle</td><td>Click center then drag to set radius.</td></tr>
+        <tr><td>3P Arc</td><td>Click three points: start, a mid-curve point, and end.</td></tr>
+        <tr><td>Polygon</td><td>Click center and drag. A dialog asks for the number of sides (3–32). Hold <kbd>Ctrl</kbd> to constrain.</td></tr>
+        <tr><td>Pattern</td><td>Click multiple points to create a filled pattern area (e.g., hatch). Double-click to finish.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══ 8. EDIT TOOLS ═══ -->
+<section id="s8">
+  <div class="section-header">
+    <div class="section-num">8</div>
+    <h2>Edit Tools</h2>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tool</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Clear Command</td><td>Cancels any active tool or in-progress drawing.</td></tr>
+        <tr><td>Drag</td><td>Click and hold a mark, then drag it to a new position.</td></tr>
+        <tr><td>Clone</td><td>Click a mark to create an exact duplicate at the same location. Then drag it to position.</td></tr>
+        <tr><td>Eraser</td><td>Click on any mark to delete it permanently (undo available).</td></tr>
+        <tr><td>Edit Properties</td><td>Click a mark to open the <strong>Mark Details</strong> panel and modify its CSI data, category, PO, etc.</td></tr>
+        <tr><td>Edit Mark Vertices</td><td>Click a line, polygon, or polyline to reveal draggable control points for reshaping.</td></tr>
+        <tr>
+          <td>Match Properties</td>
+          <td>Click a <strong>source</strong> mark to capture its properties. Then click a <strong>target</strong> mark — a dialog appears letting you choose which properties to transfer (color, category, PO, etc.). Repeat for each additional target mark.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tip"><b>Tip:</b> Use <strong>Match Properties</strong> to quickly classify identical items — set up one mark completely, then copy its properties to each additional mark one by one.</div>
+</section>
+
+<!-- ═══ 9. SUBTRACT TOOLS ═══ -->
+<section id="s9">
+  <div class="section-header">
+    <div class="section-num">9</div>
+    <h2>Subtract Tools</h2>
+  </div>
+  <p>Subtract tools allow you to deduct areas from an existing polygon or rectangle measurement — for example, removing a void, column, or opening from a floor area.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tool</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Subtract Area</td><td>Select a parent area mark, then draw a polygon over the area to subtract. Double-click to finish.</td></tr>
+        <tr><td>Edit Subtract</td><td>Click a subtraction polygon to reveal its vertices and reshape it.</td></tr>
+        <tr><td>Drag Subtract</td><td>Click and drag a subtraction polygon to reposition it.</td></tr>
+        <tr><td>Clone Subtract</td><td>Click a subtraction polygon to duplicate it on the same parent mark.</td></tr>
+        <tr><td>Remove Subtract</td><td>Click a subtraction polygon to delete it from its parent mark.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tip"><b>Result:</b> The parent mark's <strong>Total</strong> in the Report automatically reflects the net area after all subtractions.</div>
+</section>
+
+<!-- ═══ 10. MARK DETAILS ═══ -->
+<section id="s10">
+  <div class="section-header">
+    <div class="section-num">10</div>
+    <h2>Mark Details (Edit Properties)</h2>
+  </div>
+  <p>The <strong>Mark Details</strong> panel opens when you use the <strong>Edit Properties</strong> tool or immediately after placing a new mark. It lets you classify and document each mark.</p>
+  <ul class="field-list">
+    <li>
+      <span class="field-num">1</span>
+      <div class="field-body">
+        <strong>Division</strong>
+        <div class="field-desc">Select the CSI MasterFormat Division (e.g., 03 – Concrete, 08 – Openings). Required.</div>
+      </div>
+    </li>
+    <li>
+      <span class="field-num">2</span>
+      <div class="field-body">
+        <strong>Category / Subdivision</strong>
+        <div class="field-desc">Select or type the CSI Subdivision code and description (e.g., 08 44 13 – Curtain Wall). You can also enter it manually.</div>
+      </div>
+    </li>
+    <li>
+      <span class="field-num">3</span>
+      <div class="field-body">
+        <strong>MKD — Mark per Drawing</strong>
+        <div class="field-desc">The mark identifier as shown on the architectural drawing (e.g., FM-100, W-01). Used for cross-reference.</div>
+      </div>
+    </li>
+    <li>
+      <span class="field-num">4</span>
+      <div class="field-body">
+        <strong>Comment (Detail)</strong>
+        <div class="field-desc">Free text describing the item (e.g., "Type A Window, Bronze Frame"). Use <strong>Obtain from drawing</strong> to drag a rectangle over text on the plan and auto-capture it.</div>
+      </div>
+    </li>
+    <li>
+      <span class="field-num">5</span>
+      <div class="field-body">
+        <strong>Category</strong>
+        <div class="field-desc">
+          Group marks by status or type. Default options always shown:
+          <span class="badge badge-indigo">Installed</span>
+          <span class="badge badge-indigo">Purchased</span>
+          <span class="badge badge-indigo">Quoted</span>
+          <span class="badge badge-indigo">Received</span>
+          <span class="badge badge-indigo">Shipped</span><br>
+          <small>You can type any custom category and it will be saved for future use.</small>
+        </div>
+      </div>
+    </li>
+    <li>
+      <span class="field-num">6</span>
+      <div class="field-body">
+        <strong>PO — Purchase Order</strong>
+        <div class="field-desc">Link this mark to a Purchase Order number (e.g., PO-2026-001). Appears in Report and Suppliers tables.</div>
+      </div>
+    </li>
+    <li>
+      <span class="field-num">7</span>
+      <div class="field-body">
+        <strong>Delivery Note</strong>
+        <div class="field-desc">Link this mark to a vendor delivery note number (e.g., DN-2026-045). Appears in Report and Suppliers tables.</div>
+      </div>
+    </li>
+    <li>
+      <span class="field-num">8</span>
+      <div class="field-body">
+        <strong>Reference Image <small style="font-weight:400;color:var(--slate-500)">(optional)</small></strong>
+        <div class="field-desc">Attach a product or detail image. Use <strong>Search Image in Google</strong> to find one online, paste a URL, or upload a local file. The image appears in the tooltip when you hover over the mark.</div>
+      </div>
+    </li>
+  </ul>
+  <h3>Hover Tooltip</h3>
+  <p>Hovering your mouse over any mark on the canvas shows a dark tooltip displaying: <strong>Type, Division, Subdivision, MKD, Category, PO, Delivery Note, Comments, Value, Perimeter</strong> (if applicable). Fields are shown only if they contain data.</p>
+  <h3>Repeat Properties</h3>
+  <p>Check <strong>Repeat Properties</strong> in the Mark Details panel to automatically apply the same classification to the next mark you create — ideal for placing many identical items quickly.</p>
+</section>
+
+<!-- ═══ 11. NOTES & LABELS ═══ -->
+<section id="s11">
+  <div class="section-header">
+    <div class="section-num">11</div>
+    <h2>Notes &amp; Labels</h2>
+  </div>
+  <p>Notes and labels are annotation elements placed on the drawing. They do not appear in the Report but help document and communicate information on the plan.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tool</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Label</td><td>Click on the drawing to place a text callout box. Enter your text when prompted.</td></tr>
+        <tr><td>Tag</td><td>Attaches a bubble tag to an existing mark, showing a custom reference label.</td></tr>
+        <tr><td>Drag Note</td><td>Click and drag any existing label or tag to reposition it.</td></tr>
+        <tr><td>Edit</td><td>Click a label or tag to edit its text.</td></tr>
+        <tr><td>Rotate</td><td>Click a label to rotate it. Not available in callout mode.</td></tr>
+        <tr><td>Delete</td><td>Click a label or tag to remove it from the drawing.</td></tr>
+        <tr><td>Hide/Show Notes</td><td>Toggles visibility of all notes at once without deleting them.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══ 12. REPORT ═══ -->
+<section id="s12">
+  <div class="section-header">
+    <div class="section-num">12</div>
+    <h2>Report</h2>
+  </div>
+  <p>The <strong>Report</strong> view (accessible from the sidebar) provides a full summary of all marks in the project, organized in two tables.</p>
+  <h3>Category Totals</h3>
+  <p>Groups marks with the same Division + Subdivision + MKD + Comment + Category and shows the combined total. Columns:</p>
+  <p>Division &nbsp;·&nbsp; Subdivision &nbsp;·&nbsp; MKD &nbsp;·&nbsp; Comment &nbsp;·&nbsp; Category &nbsp;·&nbsp; PO &nbsp;·&nbsp; Delivery Note &nbsp;·&nbsp; Type &nbsp;·&nbsp; Color &nbsp;·&nbsp; Total &nbsp;·&nbsp; # Marks</p>
+  <h3>Details</h3>
+  <p>Lists every individual mark with its full data including location (sheet), type, and quantity.</p>
+  <h3>Filter &amp; Sort</h3>
+  <ul>
+    <li><strong>Filter by</strong> — Sort both tables by Division, Subdivision, MKD, Comment, Category, PO, or Delivery Note.</li>
+    <li><strong>Sort</strong> — A to Z or Z to A.</li>
+    <li><strong>Category Filter</strong> — Click the funnel icon to show/hide specific categories in the report.</li>
+  </ul>
+  <h3>Export to Excel</h3>
+  <p>Click <strong>Export to Excel</strong> at the bottom of the Report view to download a <code>.xlsx</code> file with both the Totals and Details tables.</p>
+  <div class="tip"><b>Tip:</b> Items marked with <strong>(R)</strong> have been revised through the Integration process. A Revised Items Notice section appears at the bottom of the report for traceability.</div>
+</section>
+
+<!-- ═══ 13. CHART ═══ -->
+<section id="s13">
+  <div class="section-header">
+    <div class="section-num">13</div>
+    <h2>Chart</h2>
+  </div>
+  <p>The <strong>Chart</strong> view provides a visual summary of project progress using an interactive donut chart based on the <strong>Category</strong> field of each mark.</p>
+  <h3>How It Works</h3>
+  <ol>
+    <li>Navigate to <strong>Chart</strong> from the sidebar.</li>
+    <li>All categories found in the project are listed as filter chips at the top.</li>
+    <li>Check or uncheck categories to include or exclude them from the chart.</li>
+    <li>The donut chart updates instantly showing the proportion of marks per category.</li>
+  </ol>
+  <h3>What Is Shown</h3>
+  <h4>Donut Chart</h4>
+  <p>Visual representation of mark counts by category. Center shows the total number of marks.</p>
+  <h4>Breakdown Table</h4>
+  <p>Lists each category with mark count, percentage, and a progress bar.</p>
+  <h4>Summary Badges</h4>
+  <p>Quick summary showing total marks and number of active categories.</p>
+  <div class="tip"><b>Tip:</b> Assign categories like <strong>Quoted</strong>, <strong>Purchased</strong>, <strong>Received</strong>, and <strong>Installed</strong> to your marks to see your procurement pipeline at a glance in the Chart view.</div>
+</section>
+
+<!-- ═══ 14. SUPPLIERS ═══ -->
+<section id="s14">
+  <div class="section-header">
+    <div class="section-num">14</div>
+    <h2>Suppliers</h2>
+  </div>
+  <p>The <strong>Suppliers</strong> module allows you to maintain a directory of vendors and link project marks to them.</p>
+  <h3>Adding a Supplier</h3>
+  <ol>
+    <li>Go to the <strong>Suppliers</strong> view from the sidebar.</li>
+    <li>Click <strong>Add Supplier</strong>.</li>
+    <li>Fill in the supplier's name, contact information, and specialty.</li>
+    <li>Save the supplier record.</li>
+  </ol>
+  <h3>Project Items Table</h3>
+  <p>Each supplier profile includes a <strong>Project Items</strong> table showing all marks assigned to that supplier. Columns include: Division, Subdivision, MKD, Comment, Category, <strong>PO</strong>, <strong>Delivery Note</strong>, From Report, Type, and Total Quantity.</p>
+  <h3>Filter &amp; Sort</h3>
+  <p>The Suppliers Project Items table supports the same <strong>Filter by</strong> and <strong>Sort</strong> options as the Report view, including filtering by PO and Delivery Note.</p>
+  <h3>Export &amp; Import</h3>
+  <ul>
+    <li><strong>Export Suppliers</strong> — Saves the full supplier directory as a <code>.json</code> file.</li>
+    <li><strong>Import Suppliers</strong> — Loads a previously exported supplier file and adds new entries.</li>
+  </ul>
+</section>
+
+<!-- ═══ 15. SAVE, RECOVER & INTEGRATE ═══ -->
+<section id="s15">
+  <div class="section-header">
+    <div class="section-num">15</div>
+    <h2>Save, Recover &amp; Integrate</h2>
+  </div>
+  <h3>Save</h3>
+  <p>Click <strong>Save</strong> in the Main Bar to download the current project as a <code>.json</code> file. This file contains all marks, notes, scales, sheet IDs, and suppliers.</p>
+  <div class="important"><b>Important:</b> The PDF file is <em>not</em> included in the saved project. Keep the original PDF file in a safe location so you can reload it when opening the project.</div>
+  <h3>Recover</h3>
+  <p>Click <strong>Recover</strong> and select a previously saved <code>.json</code> project file. Then load the corresponding PDF using <strong>Load PDF</strong>.</p>
+  <h3>Integrate</h3>
+  <p><strong>Integrate</strong> merges a second team member's project file into the current one. This is used when multiple users are working on different sections of the same project.</p>
+  <ul>
+    <li>Marks from the imported file are added to the current project.</li>
+    <li>Conflicting marks (based on ID) are flagged for review.</li>
+    <li>All integrations are logged and can be reviewed in the <strong>Integration Log</strong>.</li>
+  </ul>
+  <div class="tip"><b>Best Practice:</b> Save your project frequently. Use descriptive project names that include the date or version for easy identification (e.g., "Aurora Tower – v2 – 2026-04-06").</div>
+</section>
+
+<!-- ═══ 16. KEYBOARD SHORTCUTS ═══ -->
+<section id="s16">
+  <div class="section-header">
+    <div class="section-num">16</div>
+    <h2>Keyboard Shortcuts</h2>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>Ctrl</kbd> + <kbd>Z</kbd></td><td>Undo last action</td></tr>
+        <tr><td><kbd>Ctrl</kbd> + <kbd>Y</kbd></td><td>Redo</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Cancel active tool / close modal</td></tr>
+        <tr><td><kbd>Double-click</kbd></td><td>Finish drawing a polygon, polyline, or continuous measure</td></tr>
+        <tr><td><kbd>Right-click</kbd></td><td>Finish drawing (same as double-click for multi-point tools)</td></tr>
+        <tr><td><kbd>Ctrl</kbd> + drag</td><td>Constrain measurement to horizontal or vertical</td></tr>
+        <tr><td><kbd>F11</kbd></td><td>Toggle full screen</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</div><!-- /wrapper -->
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <strong>TakeofFly v1.0</strong> — Professional Project Takeoff &amp; Management System
+  <p style="margin-top:8px">© 2026 <strong>Ricardo Rivera Blanco</strong> · TakeofFly (Puerto Rico) · <a href="mailto:riverablancoricardo@outlook.com">riverablancoricardo@outlook.com</a></p>
+  <p style="margin-top:6px;font-size:12px;color:#64748b">All Rights Reserved. Unauthorized reproduction or distribution is prohibited.</p>
+</footer>
+
+</body>
+</html>
